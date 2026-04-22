@@ -40,11 +40,11 @@ class DataController extends AbstractController
     #[OA\Tag(name: 'Data')]
     public function list(): JsonResponse
     {
-        $list = array(
+        $list = [
             new Fruit('Apple', 'Red'),
             new Fruit('Banana', 'Yellow'),
             new Fruit('Grapes', 'Green'),
-        );
+        ];
         return $this->json($list);
     }
 }

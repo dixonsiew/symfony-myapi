@@ -190,8 +190,5 @@
         "files": [
             "./config/packages/validator.yaml"
         ]
-    },
-    "web-token/jwt-bundle": {
-        "version": "4.1.6"
     }
 }

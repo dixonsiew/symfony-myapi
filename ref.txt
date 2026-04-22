@@ -1,0 +1,2 @@
+https://symfony.com/doc/current/security.html#json-login
+https://symfony.com/doc/current/security/custom_authenticator.html

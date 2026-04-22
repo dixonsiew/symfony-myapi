@@ -12,6 +12,7 @@
         "doctrine/doctrine-bundle": "^3.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6",
+        "firebase/php-jwt": "^7.0",
         "nelmio/api-doc-bundle": "^5.10",
         "nelmio/cors-bundle": "^2.6",
         "phpdocumentor/reflection-docblock": "^6.0",
@@ -29,8 +30,7 @@
         "symfony/serializer": "8.0.*",
         "symfony/twig-bundle": "8.0.*",
         "symfony/validator": "8.0.*",
-        "symfony/yaml": "8.0.*",
-        "web-token/jwt-bundle": "^4.1"
+        "symfony/yaml": "8.0.*"
     },
     "config": {
         "allow-plugins": {

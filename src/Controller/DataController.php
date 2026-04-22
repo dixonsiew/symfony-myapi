@@ -83,6 +83,7 @@ class DataController extends AbstractController
     #[Route('/api/signup', methods: ['POST'])]
     #[OA\RequestBody(description: 'The user data for registration', required: true, content: new OA\JsonContent(ref: '#/components/schemas/SignupDto'))]
     #[OA\Response(response: 200, description:'Returns the registered user data')]
+    #[OA\Tag(name:'Data')]
     public function register(#[MapRequestPayload] SignupDto $signupDto): JsonResponse
     {
         // Here you would typically handle the registration logic, such as saving the user to the database

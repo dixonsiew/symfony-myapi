@@ -4,12 +4,24 @@ namespace App\Controller;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use OpenApi\Attributes\RequestBody;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use OpenApi\Attributes as OA;
+
+class SignupDto
+{
+    #[Assert\NotBlank]
+    #[Assert\Email]
+    public string $email;
+
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 8)]
+    public string $password;
+}
 
 class Fruit
 {
@@ -66,6 +78,19 @@ class DataController extends AbstractController
         ];
         $token = JWT::encode($payload, $key, 'HS256');
         return $this->json(['token' => $token]);
+    }
+
+    #[Route('/api/signup', methods: ['POST'])]
+    #[OA\RequestBody(description: 'The user data for registration', required: true, content: new OA\JsonContent(ref: '#/components/schemas/SignupDto'))]
+    #[OA\Response(response: 200, description:'Returns the registered user data')]
+    public function register(#[MapRequestPayload] SignupDto $signupDto): JsonResponse
+    {
+        // Here you would typically handle the registration logic, such as saving the user to the database
+        // For demonstration purposes, we'll just return the received data
+        return $this->json([
+            'email' => $signupDto->email,
+            'password' => $signupDto->password
+        ]);
     }
 
     #[Route('/api/login/data', methods: ['POST'])]

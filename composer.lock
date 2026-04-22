@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ecd68da59b379b4c7c7c1fe396b7b350",
+    "content-hash": "5632224695ae814e2461140595d36cdf",
     "packages": [
         {
             "name": "api-platform/doctrine-common",
@@ -3341,6 +3341,69 @@
                 "source": "https://github.com/DerManoMann/type-info-extras/tree/1.0.7"
             },
             "time": "2026-03-06T22:40:29+00:00"
+        },
+        {
+            "name": "soleinjast/symfony-validation-response",
+            "version": "v1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/soleinjast/symfony-validation-response.git",
+                "reference": "f1743d7f855c5871c4c6903d3a5e697020844a6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/soleinjast/symfony-validation-response/zipball/f1743d7f855c5871c4c6903d3a5e697020844a6e",
+                "reference": "f1743d7f855c5871c4c6903d3a5e697020844a6e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4",
+                "symfony/config": "^6.3|^7.0|^8.0",
+                "symfony/console": "^6.3|^7.0|^8.0",
+                "symfony/dependency-injection": "^6.3|^7.0|^8.0",
+                "symfony/framework-bundle": "^6.3|^7.0|^8.0",
+                "symfony/http-kernel": "^6.3|^7.0|^8.0",
+                "symfony/property-access": "^7.4|^8.0",
+                "symfony/serializer": "^6.3|^7.0|^8.0",
+                "symfony/validator": "^6.3|^7.0|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10.0",
+                "rector/rector": "^2.3",
+                "symfony/phpunit-bridge": "^6.3|^7.0|^8.0",
+                "symfony/yaml": "^7.4|^8.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Soleinjast\\ValidationResponse\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Soleinjast",
+                    "email": "mohammad.oveisiii@gmail.com"
+                }
+            ],
+            "description": "Clean and customizable validation error responses for Symfony APIs",
+            "keywords": [
+                "api",
+                "dto",
+                "error-handling",
+                "json",
+                "rest",
+                "symfony",
+                "validation"
+            ],
+            "support": {
+                "issues": "https://github.com/soleinjast/symfony-validation-response/issues",
+                "source": "https://github.com/soleinjast/symfony-validation-response/tree/v1.4.2"
+            },
+            "time": "2026-01-29T15:53:04+00:00"
         },
         {
             "name": "symfony/asset",

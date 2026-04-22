@@ -14,12 +14,12 @@ use OpenApi\Attributes as OA;
 
 class SignupDto
 {
-    #[Assert\NotBlank]
-    #[Assert\Email]
+    #[Assert\NotBlank(message: 'Email is required')]
+    #[Assert\Email(message:'Email is not valid')]
     public string $email;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 8)]
+    #[Assert\NotBlank(message: 'Password is required')]
+    #[Assert\Length(min: 8, minMessage: 'Password must be at least 8 characters long')]
     public string $password;
 }
 

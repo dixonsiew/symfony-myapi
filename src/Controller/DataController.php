@@ -4,18 +4,19 @@ namespace App\Controller;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use OpenApi\Attributes as OA;
+use Nelmio\ApiDocBundle\Attribute\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use OpenApi\Attributes as OA;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class SignupDto
 {
     #[Assert\NotBlank(message: 'Email is required')]
-    #[Assert\Email(message:'Email is not valid')]
+    #[Assert\Email(message: 'Email is not valid')]
     public string $email;
 
     #[Assert\NotBlank(message: 'Password is required')]
@@ -37,12 +38,22 @@ class Fruit
 
 class DataController extends AbstractController
 {
-
     #[Route('/api/data', methods: ['GET'])]
     #[OA\Response(response: 200, description: 'Returns the data')]
     #[OA\Tag(name: 'Data')]
+    #[Security(name: 'Bearer')]
     public function index(): JsonResponse
     {
+        try {
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        } catch (\Exception $e) {
+            // throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException($e->getMessage(), $e->getCode(), $e);
+            return $this->json([
+                'statusCode' => 401,
+                'message' => 'Unauthorized',
+            ], 401);
+        }
+        
         $o = new Fruit('Apple', 'Red');
         // returns '{"username":"jane.doe"}' and sets the proper Content-Type header
         return $this->json(['fruit' => $o]);
@@ -54,8 +65,18 @@ class DataController extends AbstractController
     #[Route('/api/data/list', methods: ['GET'])]
     #[OA\Response(response: 200, description: 'Returns the data list')]
     #[OA\Tag(name: 'Data')]
+    #[Security(name: 'Bearer')]
     public function list(): JsonResponse
     {
+        try {
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        } catch (\Exception $e) {
+            return $this->json([
+                'statusCode' => 401,
+                'message' => 'Unauthorized',
+            ], 401);
+        }
+
         $list = [
             new Fruit('Apple', 'Red'),
             new Fruit('Banana', 'Yellow'),
@@ -65,16 +86,16 @@ class DataController extends AbstractController
     }
 
     #[Route('/api/login', methods: ['POST'])]
-    #[OA\Response(response: 200, description:'Returns the JWT token')]
-    #[OA\Tag(name:'Data')]
+    #[OA\Response(response: 200, description: 'Returns the JWT token')]
+    #[OA\Tag(name: 'Data')]
     public function login(): JsonResponse
     {
-        $key = "*frxj2hym#7s8wp7k(jlb9b#s6kwy90o)c%#(*gigkrw+*qtz";
+        $key = '*frxj2hym#7s8wp7k(jlb9b#s6kwy90o)c%#(*gigkrw+*qtz';
         $payload = [
-            "user_id" => 123,
-            "username" => "johndoe",
-            "email" => "john@gmail.com",
-            "exp" => time() + (60 * 60) // Token expires in 1 hour
+            'user_id' => 123,
+            'username' => 'johndoe',
+            'email' => 'john@gmail.com',
+            'exp' => time() + (60 * 60)  // Token expires in 1 hour
         ];
         $token = JWT::encode($payload, $key, 'HS256');
         return $this->json(['token' => $token]);
@@ -82,8 +103,8 @@ class DataController extends AbstractController
 
     #[Route('/api/signup', methods: ['POST'])]
     #[OA\RequestBody(description: 'The user data for registration', required: true, content: new OA\JsonContent(ref: '#/components/schemas/SignupDto'))]
-    #[OA\Response(response: 200, description:'Returns the registered user data')]
-    #[OA\Tag(name:'Data')]
+    #[OA\Response(response: 200, description: 'Returns the registered user data')]
+    #[OA\Tag(name: 'Data')]
     public function register(#[MapRequestPayload] SignupDto $signupDto): JsonResponse
     {
         // Here you would typically handle the registration logic, such as saving the user to the database
@@ -98,14 +119,26 @@ class DataController extends AbstractController
     #[OA\RequestBody(description: 'The JWT token to decode', required: true, content: new OA\JsonContent(properties: [
         new OA\Property(property: 'token', type: 'string')
     ]))]
-    #[OA\Response(response: 200, description:'Returns the decoded JWT token')]
-    #[OA\Tag(name:'Data')]
+    #[OA\Response(response: 200, description: 'Returns the decoded JWT token')]
+    #[OA\Tag(name: 'Data')]
     public function decodeToken(Request $request): JsonResponse
     {
-        $key = "*frxj2hym#7s8wp7k(jlb9b#s6kwy90o)c%#(*gigkrw+*qtz";
-        $data = $request->getPayload();
-        $token = $data->get('token');
-        $decoded = JWT::decode($token, new Key($key, 'HS256'));
-        return $this->json(['decoded' => $decoded]);
+        try {
+            $key = '*frxj2hym#7s8wp7k(jlb9b#s6kwy90o)c%#(*gigkrw+*qtz';
+            $data = $request->getPayload();
+            $token = $data->get('token');
+            $decoded = JWT::decode($token, new Key($key, 'HS256'));
+            return $this->json(['decoded' => $decoded]);
+        } catch (ExpiredException $e) {
+            return $this->json([
+                'statusCode' => 401,
+                'message' => 'Token has expired',
+            ], 401);
+        } catch (\Exception $e) {
+            return $this->json([
+                'statusCode' => 500,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

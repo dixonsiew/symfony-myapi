@@ -16,10 +16,12 @@ class AccessTokenHandler implements AccessTokenHandlerInterface
         $decoded = JWT::decode($accessToken, new Key($key, 'HS256'));
         $username = $decoded->email;
         if (empty($username)) {
+            throw new BadCredentialsException('Invalid credentials.', 401);
             // and return a UserBadge object containing the user identifier from the found token
             // (this is the same identifier used in Security configuration; it can be an email,
             // a UUID, a username, a database ID, etc.)
-            return new UserBadge($username);
         }
+
+        return new UserBadge($username);
     }
 }

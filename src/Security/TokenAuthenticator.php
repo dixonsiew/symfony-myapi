@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,7 +12,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 
@@ -39,15 +39,9 @@ class TokenAuthenticator extends AbstractAuthenticator
             $badge = new UserBadge($email);
             return new SelfValidatingPassport($badge);
         } catch (ExpiredException $e) {
-            return $this->json([
-                'statusCode' => 401,
-                'message' => 'Token has expired',
-            ], 401);
+            throw new CustomUserMessageAuthenticationException('Token has expired', [], 401);
         } catch (\Exception $e) {
-            return $this->json([
-                'statusCode' => 500,
-                'message' => $e->getMessage()
-            ], 500);
+            throw new CustomUserMessageAuthenticationException($e->getMessage(), [], 500);
         }
     }
 

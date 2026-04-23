@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use OpenApi\Attributes as OA;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class SignupDto
@@ -42,18 +44,9 @@ class DataController extends AbstractController
     #[OA\Response(response: 200, description: 'Returns the data')]
     #[OA\Tag(name: 'Data')]
     #[Security(name: 'Bearer')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(): JsonResponse
     {
-        try {
-            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        } catch (\Exception $e) {
-            // throw new \Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException($e->getMessage(), $e->getCode(), $e);
-            return $this->json([
-                'statusCode' => 401,
-                'message' => 'Unauthorized',
-            ], 401);
-        }
-        
         $o = new Fruit('Apple', 'Red');
         // returns '{"username":"jane.doe"}' and sets the proper Content-Type header
         return $this->json(['fruit' => $o]);
@@ -66,17 +59,9 @@ class DataController extends AbstractController
     #[OA\Response(response: 200, description: 'Returns the data list')]
     #[OA\Tag(name: 'Data')]
     #[Security(name: 'Bearer')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function list(): JsonResponse
     {
-        try {
-            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        } catch (\Exception $e) {
-            return $this->json([
-                'statusCode' => 401,
-                'message' => 'Unauthorized',
-            ], 401);
-        }
-
         $list = [
             new Fruit('Apple', 'Red'),
             new Fruit('Banana', 'Yellow'),

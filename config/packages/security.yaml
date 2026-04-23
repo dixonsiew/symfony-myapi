@@ -14,6 +14,7 @@ security:
             pattern: ^/(_profiler|_wdt|assets|build)/
             security: false
         main:
+            stateless: true
             lazy: true
             provider: api_user_provider
             access_token:

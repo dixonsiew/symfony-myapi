@@ -21,9 +21,9 @@ class ApiUserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user): UserInterface
     {
-        if (!$user instanceof WebserviceUser) {
-            throw new UnsupportedUserException('Unsupported user class');
-        }
+        // if (!$user instanceof ApiUser) {
+        //     throw new UnsupportedUserException('Unsupported user class');
+        // }
 
         return $this->loadUserByIdentifier($user->getUserIdentifier());
     }

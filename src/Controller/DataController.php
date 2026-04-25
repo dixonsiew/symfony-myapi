@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\UserService;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -9,6 +10,7 @@ use OpenApi\Attributes as OA;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
@@ -40,6 +42,13 @@ class Fruit
 
 class DataController extends AbstractController
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     #[Route('/api/data', methods: ['GET'])]
     #[OA\Response(response: 200, description: 'Returns the data')]
     #[OA\Tag(name: 'Data')]
@@ -68,6 +77,15 @@ class DataController extends AbstractController
             new Fruit('Grapes', 'Green'),
         ];
         return $this->json($list);
+    }
+
+    #[Route('/api/usersxx', methods: ['GET'])]
+    #[OA\Response(response: 200, description: 'Returns the current user data')]
+    #[OA\Tag(name: 'Data')]
+    public function getUsers(): JsonResponse
+    {
+        $users = $this->userService->existsByOtherUsername('ken', 1);
+        return $this->json($users);
     }
 
     #[Route('/api/login', methods: ['POST'])]

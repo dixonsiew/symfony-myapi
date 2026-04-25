@@ -84,5 +84,8 @@
             "allow-contrib": false,
             "require": "8.0.*"
         }
+    },
+    "require-dev": {
+        "symfony/maker-bundle": "*"
     }
 }
